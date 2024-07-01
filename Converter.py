@@ -28,14 +28,14 @@ class Converter:
         """
         Load all mappings from ICD9 to ICD10 including GEM files and CUI mapped code
         """
-        self.__icd9_2_icd10 = json.load(open(dir_path + '/DxCodeHandler data/conversions/icd9_2_icd10_conversion.json'))
+        self.__icd9_2_icd10 = json.load(open(dir_path + '/DxCodeHandler data/conversions/icd9_2_icd10_conversion_2018.json'))
         self.__icd9_cui_icd10 = json.load(open(dir_path + '/DxCodeHandler data/conversions/icd9_cui_icd10.json'))
 
         """
-        Load all mappings from 2016 ICD10 to 2017 ICD10
+        Load all mappings from 2016 ICD10 to 2024 ICD10
         This will have to be updated on an annual basis.
         """
-        self.__icd10_conversion_table = json.load(open(dir_path + '/DxCodeHandler data/conversions/2017_conversion_table.json'))
+        self.__icd10_conversion_table = json.load(open(dir_path + '/DxCodeHandler data/conversions/2024_conversion_table.json'))
 
 
     def __isICD10Code(self, code):
@@ -111,6 +111,8 @@ class Converter:
 
         try:
             code = self.__icd9_2_icd10[code]
+            if self.__icd10_mapped(code):
+                code = self.__icd10_mapped(code)
             change = True
         except KeyError:
             pass
@@ -131,7 +133,7 @@ class Converter:
         raise Exception('%s cannot be converted to ICD10' % code)
 
     """
-    Checks for code changes from 2016 to 2017 in ICD10.
+    Checks for code changes from 2016 to 2024 in ICD10.
     """
     def __icd10_mapped(self, code):
         code = str(code)
